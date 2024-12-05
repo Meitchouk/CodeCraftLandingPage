@@ -1,11 +1,11 @@
 export const projects = [
     {
-        image: '/images/Portfolio/ProjectOne.png',
+        image: '/images/Portfolio/projectOne.png',
         title: 'Project One',
         description: 'Description of Project One.',
     },
     {
-        image: '/images/Portfolio/ProjectTwo.png',
+        image: '/images/Portfolio/projectTwo.png',
         title: 'Project Two',
         description: 'Description of Project Two.',
     },
@@ -25,12 +25,12 @@ export const projects = [
         description: 'Description of Project Five.',
     },
     {
-        image: '/images/Portfolio/3.jpg',
+        image: '/images/Portfolio/3.png',
         title: 'Project Six',
         description: 'Description of Project Six.',
     },
     {
-        image: '/images/Portfolio/4.jpg',
+        image: '/images/Portfolio/4.png',
         title: 'Project Seven',
         description: 'Description of Project Seven.',
     },
