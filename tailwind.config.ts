@@ -12,8 +12,12 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1.5rem",
       screens: {
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
         "2xl": "1400px",
       },
     },
@@ -54,9 +58,14 @@ const config: Config = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
+        none: "0",
         sm: "calc(var(--radius) - 4px)",
+        DEFAULT: "var(--radius)",
+        lg: "calc(var(--radius) + 2px)",
+        full: "9999px",
+      },
+      spacing: {
+        "5/6": "83.333333%",
       },
       keyframes: {
         "accordion-down": {
@@ -75,19 +84,38 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(20px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        fadeOut: {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "gradient-move": "gradientMove 15s ease infinite",
         fadeInUp: "fadeInUp 0.8s ease-out forwards",
+        fadeIn: "fadeIn 0.5s ease-out forwards",
+        fadeOut: "fadeOut 0.5s ease-in forwards",
+      },
+      zIndex: {
+        "-1": "-1",
+        1: "1",
+        10: "10",
+        100: "100",
+        1000: "1000",
       },
     },
   },
   plugins: [
     require("tailwindcss-animate"),
     require("@tailwindcss/typography"),
-    function ({ addUtilities }: { addUtilities: (utilities: object, variants?: string[]) => void }) {
+    require("@tailwindcss/forms"),
+    require('@tailwindcss/line-clamp'),
+    function ({ addUtilities }: { addUtilities: (utilities: Record<string, any>, variants?: string[]) => void }) {
       const newUtilities = {
         ".delay-100": { "animation-delay": "0.1s" },
         ".delay-200": { "animation-delay": "0.2s" },
