@@ -1,81 +1,72 @@
 "use client";
 
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+import React, { useState } from "react";
 import { usePathname } from "@/lib/translations";
 import { useTranslations, useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { TiWorldOutline } from "react-icons/ti";
-
-/**
- * LanguageSwitcher component.
- *
- * This component displays a dropdown menu for selecting the language.
- * It uses the `useTranslations`, `useRouter`, `usePathname`, and `useLocale` hooks from "next/navigation" and "next-intl".
- * The selected language can be changed by clicking on the available language options.
- *
- * @returns The LanguageSwitcher component.
- */
+import { Globe } from "lucide-react";
 
 export default function LanguageSwitcher() {
-  const t = useTranslations(); // Obtenemos la función t para traducir el texto
-  const router = useRouter(); // creamos una variable router para usar el hook useRouter y poder navegar entre rutas
-  const pathname = usePathname(); // Obtenemos la ruta actual con el hook usePathname
-  const locale = useLocale(); // Obtenemos el idioma actual con el hook useLocale
-  const startTransition = useTransition()[1]; // Obtenemos la función startTransition para realizar transiciones de forma suave y seleccionamos el segundo elemento del array que retorna useTransition 
+  const t = useTranslations();
+  const router = useRouter();
+  const pathname = usePathname();
+  const locale = useLocale();
+  const startTransition = useTransition()[1];
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  function Action({
-    index,
-    text,
-    locale,
-  }: {
-    index: number;
-    text: string;
-    locale: string;
-  }) {
-    return (
-      <DropdownMenuItem
-        key={`menu-item-${index}`}
-        onClick={() =>
-          startTransition(() => router.replace(`/${locale}${pathname}`))
-        }
-      >
-        {text}
-      </DropdownMenuItem>
-    );
-  }
-
-  // Lista de idiomas disponibles
   const languages = [
-    { code: "en", label: t("ENGLISH") },
-    { code: "es", label: t("SPANISH") },
+    { code: "en", label: "EN" },
+    { code: "es", label: "ES" },
   ];
 
+  const handleLanguageChange = (newLocale: string) => {
+    startTransition(() => router.replace(`/${newLocale}${pathname}`));
+    setIsDropdownOpen(false);
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        className="px-4 py-2 bg-blue-500 text-white rounded flex items-center space-x-2"
-        type="button"
-      >
-        <TiWorldOutline />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {languages
-          .filter((language) => language.code !== locale) // Realiza un filtro para mostrar solo los idiomas diferentes al idioma actual seleccionado
-          .map((language, index) => (
-            <Action
-              key={index}
-              index={index}
-              text={language.label}
-              locale={language.code}
-            />
-          ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex md:items-center md:justify-center">
+      {/* Mobile View: Horizontal Buttons */}
+      <div className="flex items-center space-x-4 md:hidden">
+        {languages.map((language) => (
+          <button
+            key={language.code}
+            onClick={() => handleLanguageChange(language.code)}
+            className={`px-4 py-2 text-sm font-medium rounded ${locale === language.code
+              ? "bg-primary text-primary-foreground"
+              : "bg-muted text-muted-foreground hover:bg-primary hover:text-primary-foreground"
+              } transition`}
+          >
+            {language.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Desktop View: Dropdown Menu */}
+      <div className="hidden md:block relative">
+        <button
+          onClick={() => setIsDropdownOpen((prev) => !prev)}
+          className="flex items-center justify-center p-2 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition"
+        >
+          <Globe className="w-5 h-5" />
+        </button>
+        {isDropdownOpen && (
+          <div className="absolute top-full right-0 mt-2 bg-white dark:bg-gray-800 shadow-md rounded-md">
+            {languages
+              .filter((language) => language.code !== locale)
+              .map((language) => (
+                <button
+                  key={language.code}
+                  onClick={() => handleLanguageChange(language.code)}
+                  className="block w-full px-4 py-2 text-left hover:bg-primary hover:text-primary-foreground transition"
+                >
+                  {language.label}
+                </button>
+              ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
